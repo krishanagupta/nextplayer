@@ -1005,6 +1005,7 @@ class PlayerService : MediaSessionService() {
             .build()
             .also {
                 it.setPlaybackSpeed(playerPreferences.defaultPlaybackSpeed)
+                it.skipSilenceEnabled = true
                 it.addListener(playbackStateListener)
                 it.pauseAtEndOfMediaItems = !playerPreferences.autoplay
                 it.repeatMode = when (playerPreferences.loopMode) {
@@ -1055,6 +1056,13 @@ class PlayerService : MediaSessionService() {
                     ),
                 )
             }.build()
+            mediaSession?.sessionExtras =
+                Bundle(mediaSession?.sessionExtras ?: Bundle.EMPTY).apply {
+                    putBoolean(
+                        CustomCommands.SKIP_SILENCE_ENABLED_KEY,
+                        true,
+                    )
+                }
         } catch (e: Exception) {
             e.printStackTrace()
         }
